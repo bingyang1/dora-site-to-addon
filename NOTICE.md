@@ -1,5 +1,10 @@
 # NOTICE · 第三方内容归属
 
+> **LICENSE 覆盖范围**：仓库中的 `LICENSE`（MIT）**仅覆盖作者原创内容** ——
+> `SKILL.md`、`WORKFLOW.md`、`reference/01~11-*.md`、`templates/`、`scripts/`、
+> `examples/demo-bing-wallpaper/`。
+> 其余第三方内容另有归属，见下文。
+
 本仓库是一个「技能包」，为了方便离线查阅，收录了部分第三方内容。
 **这些内容的版权归各自作者所有，本仓库仅作技术学习与归档用途。**
 
