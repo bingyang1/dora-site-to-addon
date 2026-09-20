@@ -1,0 +1,26 @@
+{
+  "name": "dorajs-demo-bing-wallpaper",
+  "displayName": "必应每日壁纸",
+  "version": "1.0.0",
+  "uuid": "5f2c1a84-9b3d-4e6f-8a71-2c4d6e8f0a13",
+  "description": "必应每日壁纸 · 无依赖 · 可作为「接口站」配方的完整可跑示例",
+  "updates": "首个版本",
+  "icon": "assets/icon.png",
+  "prefs": "assets/prefs.json",
+  "main": "main.js",
+  "license": "MIT",
+  "author": {
+    "name": "yourname"
+  },
+  "engineStrick": true,
+  "engines": {
+    "dora": ">=1.8.0"
+  },
+  "keywords": [
+    "Dora.js"
+  ],
+  "categories": [
+    "image"
+  ],
+  "dependencies": {}
+}

@@ -1,0 +1,19 @@
+{
+  "mkt": {
+    "type": "string",
+    "default": "zh-CN",
+    "title": "壁纸地区",
+    "options": [
+      { "value": "zh-CN", "title": "中国" },
+      { "value": "en-US", "title": "美国" },
+      { "value": "ja-JP", "title": "日本" },
+      { "value": "en-GB", "title": "英国" },
+      { "value": "de-DE", "title": "德国" }
+    ]
+  },
+  "perPage": {
+    "type": "number",
+    "default": 8,
+    "title": "每页数量（1-8）"
+  }
+}

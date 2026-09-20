@@ -1,0 +1,23 @@
+{
+  "name": "@dora.js/readhub",
+  "displayName": "Readhub",
+  "version": "1.0.0",
+  "uuid": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+  "description": "每天三分钟的科技新闻聚合阅读（官方示例）",
+  "icon": "assets/icon.png",
+  "main": "main.js",
+  "license": "MIT",
+  "author": {
+    "name": "linroid"
+  },
+  "engines": {
+    "dora": ">=1.8.0"
+  },
+  "keywords": [
+    "Dora.js"
+  ],
+  "categories": [
+    "article"
+  ],
+  "dependencies": {}
+}

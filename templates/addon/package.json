@@ -1,0 +1,38 @@
+{
+  "name": "dorajs-my-site",
+  "displayName": "我的站点",
+  "version": "1.0.0",
+  "uuid": "00000000-0000-4000-8000-000000000000",
+  "description": "把站点写成了 Dora.js 扩展",
+  "updates": "首个版本",
+  "icon": "assets/icon.png",
+  "prefs": "assets/prefs.json",
+  "main": "main.js",
+  "license": "MIT",
+  "author": {
+    "name": "yourname",
+    "fullname": "",
+    "email": ""
+  },
+  "engineStrick": true,
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "homepage": "",
+  "engines": {
+    "dora": ">=1.8.0"
+  },
+  "keywords": [
+    "Dora.js"
+  ],
+  "categories": [
+    "video"
+  ],
+  "contributes": {
+    "search": "search"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12"
+  }
+}

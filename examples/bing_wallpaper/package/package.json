@@ -1,0 +1,26 @@
+{
+  "name": "@dora.js/bing-wallpaper",
+  "displayName": "必应壁纸",
+  "version": "1.0.0",
+  "uuid": "b2a1c3d4-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+  "description": "每日必应壁纸（官方示例）",
+  "icon": "assets/bing.png",
+  "prefs": "assets/prefs.json",
+  "main": "main.js",
+  "license": "MIT",
+  "author": {
+    "name": "linroid"
+  },
+  "engines": {
+    "dora": ">=1.8.0"
+  },
+  "keywords": [
+    "Dora.js"
+  ],
+  "categories": [
+    "image"
+  ],
+  "dependencies": {
+    "wonderful-bing-wallpaper": "^1.0.5"
+  }
+}

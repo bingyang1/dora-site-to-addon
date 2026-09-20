@@ -1,0 +1,27 @@
+{
+  "name": "@dora.js/unsplash",
+  "displayName": "Unsplash",
+  "version": "1.2.1",
+  "uuid": "8ce7453e-dc59-11e9-9d36-2a2ae2dbcce4",
+  "description": "高清晰度免费图片素材，适用个人和商业（官方示例）",
+  "icon": "assets/icon.png",
+  "prefs": "assets/prefs.json",
+  "main": "main.js",
+  "license": "MIT",
+  "author": {
+    "name": "linroid"
+  },
+  "engines": {
+    "dora": ">=1.8.0"
+  },
+  "keywords": [
+    "Dora.js"
+  ],
+  "categories": [
+    "image"
+  ],
+  "dependencies": {
+    "node-fetch": "^2.6.0",
+    "unsplash-js": "^6.0.0"
+  }
+}

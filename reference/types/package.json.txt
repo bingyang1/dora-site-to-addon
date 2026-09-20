@@ -1,0 +1,17 @@
+{
+  "name": "@dora.js/types",
+  "version": "1.0.4",
+  "description": "Dora.js js runtime types",
+  "scripts": {
+    "build": "./build.sh",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "types": "index.d.ts",
+  "typings": "index.d.ts",
+  "author": "linroid",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^13.9.2",
+    "axios": "^0.19.2"
+  }
+}

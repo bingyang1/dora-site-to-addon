@@ -1,0 +1,31 @@
+{
+  "endpoint": {
+    "type": "string",
+    "default": "https://www.example.com",
+    "title": "站点地址"
+  },
+  "token": {
+    "type": "password",
+    "default": null,
+    "title": "登录 Token（可选）"
+  },
+  "quality": {
+    "type": "string",
+    "default": "1080p",
+    "title": "默认画质",
+    "options": [
+      { "value": "1080p", "title": "高清 1080P" },
+      { "value": "720p", "title": "标清 720P" }
+    ]
+  },
+  "enableDanmaku": {
+    "type": "boolean",
+    "default": true,
+    "title": "开启弹幕"
+  },
+  "pageSize": {
+    "type": "number",
+    "default": 20,
+    "title": "每页数量"
+  }
+}

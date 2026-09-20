@@ -1,0 +1,37 @@
+{
+  "uuid": "2f33d8de-c474-4f38-a19b-cf2cab4228cc",
+  "name": "@dora.js/api-demo",
+  "displayName": "示例扩展",
+  "version": "1.8.1",
+  "description": "快速体验 Dora.js 提供的各种能力（官方示例，强烈建议通读）",
+  "license": "MIT",
+  "updates": "添加 $permission.request() 示例；本副本合并了 npm 1.8.1 的组件与 GitHub master 的 tasks 演示",
+  "author": {
+    "name": "linroid",
+    "fullname": "Lin Zhang",
+    "email": "linroid@gmail.com"
+  },
+  "engines": {
+    "dora": ">=1.8.0"
+  },
+  "keywords": [
+    "Dora.js"
+  ],
+  "icon": "assets/icon.png",
+  "prefs": "assets/prefs.json",
+  "main": "main.js",
+  "contributes": {
+    "search": "search",
+    "tasks": {
+      "get_ip": {
+        "icon": "assets/ip.svg",
+        "label": "Sample: 获取外网 IP"
+      }
+    }
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "cheerio": "^1.0.0-rc.3",
+    "lru-cache": "^5.1.1"
+  }
+}
