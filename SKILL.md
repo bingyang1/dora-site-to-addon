@@ -109,6 +109,41 @@ sh scripts/build_dora.sh <工程目录>    # 输出 /sdcard/Download/dora/xxx-v1
 ```
 不要用 zip 打前缀 `package/` 之外的东西，也不要包含 `node_modules`。
 
+### Step 6.5 — 真机联调（改完立刻在手机上生效）★ 强烈推荐
+
+打包之后的**优先验证手段**（先把 `.dora` 装一次，手机上有了 uuid 才能热推）。
+Dora.js 内置 `4000` 端口的 HTTP 服务，官方 VSCode 插件只是它的
+http 客户端 —— 所以**不需要 VSCode、不需要电脑、不需要 WiFi**，直接打 `127.0.0.1:4000` 就行。
+
+```bash
+SH=scripts/dora-sync.sh
+sh $SH ping              # 探活（连不上会自动尝试把 Dora 拉到前台）
+sh $SH list              # 列出手机里的扩展，拿 uuid
+sh $SH pull demo ./demo  # 拉源码到本地（平铺工程）
+sh $SH push ./demo       # 推上去 → 手机端提示「demo 已更新」
+sh $SH watch ./demo      # 盯着目录，一改就推（≈ 官方 autoPush）
+```
+
+前置 & 联调铁律（踩了就卡死，详见 **`reference/12-live-sync.md`**）：
+
+- 前置：Dora.js 里**长按扩展 → 右上角菜单「连接 VSCode」**（开一次即可，端口 4000 由它监听）
+- 铁律 ①：**同步期间 Dora 必须在前台**。它一进后台就被系统冻结（`cpuset:/background`），
+  TCP 直接**超时**（不是 404、不是拒绝）。解法：`am start -n com.linroid.dora/.ui.DoraActivity`
+- 铁律 ②：联调 zip 是**平铺**的（根目录直接是 `package.json` / `main.js` / `components/`），
+  **不要**带 `package/` 前缀 —— 那是 `.dora` 安装包的规矩，别搞混
+- 铁律 ③（★最容易踩）：**zip 里必须包含「目录条目」**（`assets/`、`components/` 这类以 `/` 结尾的条目）。
+  App 的解包器只对目录条目执行 `mkdirs()`，遇到文件条目直接 `File(root, "assets/icon.png").createNewFile()`；
+  没有目录条目 → 抛 `IOException: No such file or directory` → **子目录文件全丢、整个安装中止**，
+  而 HTTP **照样返回 `code:0`**。⚠️ **Python 的 `zipfile.write()` 不会自动生成目录条目**
+  （`zip -r` / `tar` / Node `archiver` 会）。用 `scripts/dora-sync.sh push` 已内置该逻辑 + 打包后自检；
+  手写打包脚本务必对照 `reference/12-live-sync.md` §2.4
+- 铁律 ④：Live Sync 只能**更新已存在**的扩展（uuid 对不上会被**静默忽略**）。首次必须先让手机上
+  有这个 uuid —— 装 `.dora` 包 / 手机端「创建扩展」/ **数据库安装法**都可以，之后才能热推
+- 铁律 ⑤：**`code:0` 不代表成功**。解包失败、yarn 报错、uuid 不存在，一律返回 `code:0`。
+  验证只看三样：文件 md5、标记字符串、
+  `logcat -d --pid $(pidof com.linroid.dora) | grep -E 'Httpd|AddonManager'`
+- 环境差异：Android shell 有 `am` 能拉前台但没 `python3`；Linux 终端能打包但没 `am`。脚本会自动降级
+
 ---
 
 ## 3. 数据映射对照表（最核心的一页）
@@ -201,11 +236,13 @@ sh scripts/build_dora.sh <工程目录>    # 输出 /sdcard/Download/dora/xxx-v1
 | `reference/09-pitfalls.md` | 常见坑与排错手册 |
 | `reference/10-npm-ecosystem.md` | **npm 生态调研**：137 个真实插件、6 个精选案例（i18n/直播间/工程化分层） |
 | `reference/11-api-reality-check.md` | **文档外 API 实测表**：`$clipboard`、`$prefs.open()` 等 + 文档与实现的差异清单 |
+| `reference/12-live-sync.md` | **真机联调全解**：`4000` 端口 HTTP 协议、**zip 必须带目录条目（§2.4，头号大坑）**、后台冻结坑、平铺 zip 约定、脚本用法与实测记录 |
+| `reference/13-app-internals.md` | **App 内部机制**：装扩展的 4 步、`dorajs.db` 表结构、**数据库安装法**、push 的真实行为与完整日志链（含失败根因）、无界面自动化小抄 |
 | `reference/types/globals.d.ts` | **官方运行时类型定义原文**（比文档更权威的字段级真相） |
 | `reference/raw/` | Dora.js **官方文档原文镜像**（37 篇 markdown，离线可查） |
 | `templates/addon/` | 可直接复制的工程骨架（含注释） |
 | `examples/` | 真实可跑的完整示例（demo-bing-wallpaper / api_demo / readhub / unsplash / bing_wallpaper） |
-| `scripts/` | `new_addon.sh` 脚手架、`build_dora.sh` 打包、`check_addon.py` 校验、`probe_site.sh` 侦察 |
+| `scripts/` | `new_addon.sh` 脚手架、`build_dora.sh` 打包、`check_addon.py` 校验、`probe_site.sh` 侦察、`dora-sync.sh` **真机联调**（ping/list/pull/push/watch） |
 
 ## 6.5 遇到没见过的问题时，去 npm 抄作业
 

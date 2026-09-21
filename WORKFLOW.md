@@ -160,6 +160,44 @@ tar -tzf <输出.dora> | head -5     # 必须 package/ 开头
 
 ---
 
+## Step 6.5 · 真机联调（可选，但强烈推荐）
+
+**能联调就别打包**——打包→传手机→安装→进页面→翻日志，一轮 2 分钟；
+Live Sync 改完 2 秒就在手机上看到效果（就是官方 VSCode 插件的 `autoPush`，但不用电脑）。
+
+```bash
+SH=$SKILL/scripts/dora-sync.sh
+
+sh $SH ping                       # 探活（连不上会自动尝试把 Dora 拉到前台）
+sh $SH list                       # 列扩展，拿 uuid
+sh $SH pull <uuid|名称> ./dev      # 拉真机源码到本地（平铺工程）
+sh $SH push ./dev                 # 推回去 → 手机端提示「xxx 已更新」
+sh $SH watch ./dev                # 盯目录，一改就推
+```
+
+**前置**：Dora.js → 长按扩展 → 右上角菜单 → 「连接 VSCode」（服务监听 `127.0.0.1:4000`）。
+
+**两条铁律**（违反必卡死）：
+
+| # | 铁律 | 踩了会怎样 | 解法 |
+|---|---|---|---|
+| ① | 同步期间 **Dora 必须在前台** | 它进后台被系统冻结，TCP **超时**（`HTTP=000`，不是 404/拒绝） | `am start -n com.linroid.dora/.ui.DoraActivity`（Shizuku 即可，无需 root），或分屏保持可见 |
+| ② | 联调 zip 必须**平铺**（根目录就是 `package.json`） | 套了一层 `package/`，扩展直接废掉 | 用 `dora-sync.sh push`，它按官方规则打包并排除 `node_modules` |
+
+**排查一条命令**：
+
+```bash
+PID=$(pidof com.linroid.dora); cat /proc/$PID/cgroup | head -3
+# cpuset:/background → 就是这个坑；cpuset:/foreground → 正常
+```
+
+完整协议 / 实测记录 / 环境差异 / 安全须知：**`reference/12-live-sync.md`**。
+装扩展 4 步、`dorajs.db` 表结构、数据库安装法、push 为何返回 `code:0` 却没落地：**`reference/13-app-internals.md`**。
+
+> ⚠️ 联调只适合「开发中反复改」；**最终交付仍要走 Step 6 打包 `.dora`**，两者目录结构不同。
+
+---
+
 ## Step 7 · 交付（必须给用户这些）
 
 ```

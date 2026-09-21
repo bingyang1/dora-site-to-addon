@@ -29,7 +29,7 @@
        my-site-v1.0.0.dora       ← 可直接安装的插件包
 ```
 
-按 `WORKFLOW.md` 走 7 步：侦察站点 → 判定配方 → 生成骨架 → 写解析 → 自检 → 打包 → 交付。
+按 `WORKFLOW.md` 走 8 步（多一步真机联调）：侦察站点 → 判定配方 → 生成骨架 → 写解析 → 自检 → 打包 → **真机联调** → 交付。
 
 ## 快速开始
 
@@ -56,6 +56,29 @@ sh $SKILL/scripts/build_dora.sh ~/my-site
 
 把生成的 `.dora` 传到手机，用 Dora.js 打开即可安装。
 
+## 真机联调（Live Sync）—— 改一行，手机上立刻生效
+
+Dora.js 内置一个 **HTTP 服务（`4000` 端口）**，官方 VSCode 插件只是它的 http 客户端。
+所以**不需要 VSCode、不需要电脑、不需要同一 WiFi**：直接打 `127.0.0.1:4000` 就行。
+
+```bash
+SH=scripts/dora-sync.sh
+sh $SH list                 # 列出手机里的扩展（含 uuid）
+sh $SH pull demo ./demo     # 拉源码到本地（平铺工程）
+sh $SH push ./demo          # 打包推送 → 手机端提示「demo 已更新」
+sh $SH watch ./demo         # 盯着目录，一改就推（≈ 官方 autoPush）
+```
+
+⚠️ 三个坑（细节见 [`reference/12-live-sync.md`](reference/12-live-sync.md)）：
+
+1. **Dora 必须在前台** —— 它一进后台就被系统冻结，TCP 直接**超时**（`cpuset:/background`），
+   用 `am start -n com.linroid.dora/.ui.DoraActivity` 拉回来（Shizuku 即可，无需 root）；
+2. 联调 zip 是**平铺**的（根目录就是 `package.json`），**不要**带 `package/` 前缀 —— 那和 `.dora` 安装包不一样；
+3. ⚠️ **zip 里必须带「目录条目」**（`assets/`、`components/` 这类以 `/` 结尾的条目）。
+   Python 的 `zipfile.write()` **不会**自动生成它们，结果就是子目录文件全丢 +
+   `IOException: No such file or directory` —— 而 HTTP 照样回 `code:0`，非常难查。
+   `dora-sync.sh push` 已内置正确逻辑并在打包后自检。
+
 ## 能做什么 / 怎么做
 
 | 站点类型 | 识别特征 | 组件方案 |
@@ -72,9 +95,9 @@ sh $SKILL/scripts/build_dora.sh ~/my-site
 ```
 dora-site-to-addon/
 ├── SKILL.md                       技能入口：铁律 + 工作流 + 数据映射表 + 自检清单
-├── WORKFLOW.md                    ★「站点 → 项目」7 步执行手册 + 分支处理 + 验收清单
+├── WORKFLOW.md                    ★「站点 → 项目」8 步执行手册 + 分支处理 + 验收清单
 │
-├── reference/                     知识库（12 篇精编 + 官方原文）
+├── reference/                     知识库（14 篇精编 + 官方原文）
 │   ├── 01-project-structure.md    工程结构 / package.json / prefs.json / main.js
 │   ├── 02-components-core.md      组件基础、生命周期、fetch 返回值
 │   ├── 03-list-component.md       list 组件、分页、13 种条目样式
@@ -86,6 +109,8 @@ dora-site-to-addon/
 │   ├── 09-pitfalls.md             坑与排错手册
 │   ├── 10-npm-ecosystem.md        ★ 137 个真实插件调研 + 6 个案例拆解
 │   ├── 11-api-reality-check.md    ★ 文档外 API 实测表 + 差异清单
+│   ├── 12-live-sync.md            ★ 真机联调：4000 端口协议 + 后台冻结坑 + 平铺 zip 约定
+│   ├── 13-app-internals.md        ★ App 内部机制：扩展 4 步安装 + dorajs.db 表 + 数据库安装法
 │   ├── types/                     官方运行时类型定义 globals.d.ts（字段级权威）
 │   └── raw/                       Dora.js 官方文档原文镜像（37 篇 md）
 │
@@ -106,7 +131,8 @@ dora-site-to-addon/
 │   ├── new_addon.sh               脚手架（生成 uuid、替换包名）
 │   ├── build_dora.sh              打包成 .dora（保证 package/ 根目录）
 │   ├── check_addon.py             自检：结构/路由/语法/相对 require
-│   └── probe_site.sh              站点侦察（指纹识别 + 选择器线索）
+│   ├── probe_site.sh              站点侦察（指纹识别 + 选择器线索）
+│   └── dora-sync.sh               ★ 真机联调：ping / list / pull / push / watch（无需 VSCode）
 │
 ├── LICENSE                        MIT（仅覆盖原创部分）
 └── NOTICE.md                      第三方内容归属与免责声明
